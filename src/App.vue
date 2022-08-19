@@ -7,9 +7,12 @@
 </template>
 
 <script>
+import StartPage from './components/StartPage/StartPage.vue';
+import GamePage from './components/GamePage/GamePage.vue';
+import EndPage from './components/EndPage/EndPage.vue';
 export default {
     name: "App",
-    components: { StartPage, gamePage, endPage },
+    components: { StartPage, GamePage, EndPage },
     data(){
         return{
             gameStatue:1,
