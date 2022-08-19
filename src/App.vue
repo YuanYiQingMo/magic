@@ -13,7 +13,6 @@ export default {
     data(){
         return{
             gameStatue:1,
-
         }
     },
     methods:{
