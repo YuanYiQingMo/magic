@@ -1,6 +1,6 @@
 <template>
     <div class="inGame">
-        <Button type="primary" @click="startGame">结束游戏</Button>
+        <Button type="primary" @click="endGame">结束游戏</Button>
     </div>
 </template>
 <script>
