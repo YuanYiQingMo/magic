@@ -1,0 +1,21 @@
+{
+    "item_pool":[
+        {
+            "name":"恢复药水",
+            "effect":{
+                "target":"yourself",
+                "HP":5
+            },
+            "break":1
+        },
+        {
+            "name":"炸弹",
+            "effect":{
+                "target":"enemy",
+                "AOE":true,
+                "damage":10
+            },
+            "break":1
+        }
+    ]
+}
