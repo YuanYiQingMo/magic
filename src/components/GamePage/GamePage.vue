@@ -16,7 +16,7 @@
             HP：{{ health }}/{{ maxHealth }}
         </div>
         <div class="MP-bar">
-            MP：{{ Mana }}/{{ maxMana }}
+            MP：{{ mana }}/{{ maxMana }}
         </div>
         <!--法杖 -->
         <div class="wand-editor">
@@ -53,7 +53,7 @@ export default {
         return {
             score: 0,
             mana:50,
-            MaxMana:50,
+            maxMana:50,
             health:30,
             maxHealth:30,
             enemyList:[{name:'球'},{name:'啊'}],
