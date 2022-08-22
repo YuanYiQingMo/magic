@@ -32,5 +32,6 @@ export function randomRate(rate){
 export function lootMagic(rate){
     let quality = randomRate(rate);
     let randomId = Math.floor(Math.random() * ((magic_pool[quality]).length));
+    (magic_pool[quality])[randomId].quality = quality;
     return (magic_pool[quality])[randomId];
 }

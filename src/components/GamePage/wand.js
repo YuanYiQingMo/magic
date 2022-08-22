@@ -1,3 +1,5 @@
+import { Message } from "view-design";
+const DEFAULT_MAGIC = require('../../assets/Pool/magic_pool.json').Tier1[0];
 const DEFAULT_MAX_LENGTH = 4;
 
 class wand{
@@ -6,7 +8,11 @@ class wand{
         this.magicMaxLength = DEFAULT_MAX_LENGTH;
     }
     addMagic(item){
-        this.magicBox.push(item);
+        if(this.magicBox.length < this.magicMaxLength){
+            this.magicBox.push(item);
+        }else{
+            Message.error('你的法术容量不足');
+        }
     }
     deleteMagic(index){
         this.magicBox.splice(index, 1);
@@ -15,7 +21,7 @@ class wand{
         this.magicMaxLength = maxLength;
     }
     reload(){
-        this.magicBox = [];
+        this.magicBox = [DEFAULT_MAGIC];
         this.magicMaxLength = DEFAULT_MAX_LENGTH;
     }
 }

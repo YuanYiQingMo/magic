@@ -1,5 +1,5 @@
 <template>
-    <div class="inGame">
+    <div class="in-game">
         <div class="score">
             得分: {{ score }}
         </div>
@@ -15,18 +15,28 @@
         <div class="health-bar">
             HP：{{ health }}/{{ maxHealth }}
         </div>
-        <!-- 战利品获取 -->
-        <div v-if="isLoot" class="loot-bar">
-            <div class="loot-title">点击获取魔法</div>
-            <div v-for="(item,index) in lootList" class="loot-item" :key="index" @click="addMagic(item)">
-                {{ item.magic_name }}
-            </div>
+        <div class="MP-bar">
+            MP：{{ Mana }}/{{ maxMana }}
         </div>
         <!--法杖 -->
         <div class="wand-editor">
             <div class="wand-title">点击使用魔法</div>
-            <div v-for="(wandBox,index) in wand.magicBox" class="wandBox" :key="index" @click="useMagic(item)">
-                {{ wandBox.name }}
+            <div class="wand-bar">
+                <div v-for="(wandBox,index) in wand.magicBox" :class="'wandBox ' + wandBox.quality" :key="index" @click="useMagic(wandBox)">
+                    {{ wandBox.magic_name }}
+                    <Poptip trigger="hover" :title="wandBox.magic_name" :content="wandBox.magic_describe">
+                        <Icon style="font-size: 24px" type="ios-information-circle-outline" />
+                    </Poptip>
+                </div>
+            </div>
+        </div>
+        <!-- 战利品获取 -->
+        <div v-if="isLoot" class="loot-bar">
+            <div class="loot-title">选择其中一个魔法魔法</div>
+            <div class="loot-item-bar">
+                <div v-for="(item,index) in lootList" :class="'loot-item ' + item.quality" :key="index" @click="addMagic(item)">
+                    {{ item.magic_name }}
+                </div>
             </div>
         </div>
         <Button v-if="isEnd" type="primary" @click="endGame">结束游戏</Button>
@@ -42,6 +52,8 @@ export default {
     data(){
         return {
             score: 0,
+            mana:50,
+            MaxMana:50,
             health:30,
             maxHealth:30,
             enemyList:[{name:'球'},{name:'啊'}],
@@ -61,14 +73,12 @@ export default {
             this.score = 0;
             this.health = 30;
             this.maxHealth = 30;
-            this.wand.reload();
             this.lootList = [];
             this.magicPool = [];
             this.stage = 0;
+            this.wand.reload();
             for(let i = 0; i < 5; i++){
-                console.log(i)
                 this.lootList.push(lootMagic('normal'));
-                this.lootList[i].id = i;
             }
         },
         win(){
@@ -101,11 +111,74 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.in-game {
+    margin: 0 24px;
+}
 .battle-map {
     display: flex;
     justify-content: space-around;
+    border: solid black 1px;
+    min-height: 300px;
 }
 .enemy {
     display: flex;
+}
+
+.wand-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    border: solid black 1px;
+    min-height: 150px;
+}
+
+.wandBox{
+    cursor: pointer;
+    border: solid black 1px;
+    border-radius: 10px;
+    width: 20%;
+    height: 50px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.loot-bar{
+    display: flex;
+    flex-direction: column;
+}
+
+.loot-item-bar{
+    display: flex;
+    flex-direction: row;
+}
+.loot-item{
+    cursor: pointer;
+    border: solid black 1px;
+    border-radius: 10px;
+    width: 60%;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+// 品质颜色
+</style>
+<style>
+.Tier1{
+    background-color: #ffffff;
+}
+.Tier2{
+    background-color: #3f3cff;
+}
+.Tier3{
+    background-color: #f832ee;
+}
+.Tier4{
+    background-color: #ffae00;
+}
+.Tier5{
+    background-color: #ff0000;
 }
 </style>
