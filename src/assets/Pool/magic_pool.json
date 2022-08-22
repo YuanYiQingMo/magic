@@ -1,0 +1,37 @@
+{
+    "Tier1": [
+        {
+            "magic_id": 10001,
+            "magic_name": "火球术",
+            "magic_effect_id": [1, 2]
+        }
+    ],
+    "Tier2": [
+        {
+            "magic_id": 20001,
+            "magic_name": "大火球术",
+            "magic_effect_id": [1, 2]
+        }
+    ],
+    "Tier3": [
+        {
+            "magic_id": 30001,
+            "magic_name": "大大火球术",
+            "magic_effect_id": [1, 2]
+        }
+    ],
+    "Tier4": [
+        {
+            "magic_id": 40001,
+            "magic_name": "大大大火球术",
+            "magic_effect_id": [1, 2]
+        }
+    ],
+    "Tier5": [
+        {
+            "magic_id": 50001,
+            "magic_name": "大大大大火球术",
+            "magic_effect_id": [1, 2]
+        }
+    ]
+}
