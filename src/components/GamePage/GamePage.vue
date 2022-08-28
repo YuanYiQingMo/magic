@@ -24,7 +24,7 @@
             <div class="wand-bar">
                 <div v-for="(wandBox,index) in wand.magicBox" :class="'wandBox ' + wandBox.quality" :key="index" @click="useMagic(wandBox)">
                     {{ wandBox.magic_name }}
-                    <Poptip trigger="hover" :title="wandBox.magic_name" :content="wandBox.magic_describe">
+                    <Poptip  trigger="hover" :title="wandBox.magic_name" :content="wandBox.magic_describe">
                         <Icon style="font-size: 24px" type="ios-information-circle-outline" />
                     </Poptip>
                 </div>
@@ -56,7 +56,7 @@ export default {
             maxMana:50,
             health:30,
             maxHealth:30,
-            enemyList:[{name:'球'},{name:'啊'}],
+            enemyList:[],
             isLoot:true,
             lootList:[],
             wand:new wand(),
@@ -87,9 +87,11 @@ export default {
         },
         addMagic(item){
             this.wand.addMagic(item);
+            this.isLoot = false;
         },
         useMagic(item){
             console.log(item)
+            this.mana -= item.MP;
         }
     },
     computed:{

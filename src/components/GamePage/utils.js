@@ -1,5 +1,6 @@
 /* 魔法生成工具 */
-const magic_pool = require('../../assets/Pool/magic_pool.json')
+const magic_pool = require('../../assets/Pool/magic_pool.json');
+const enemy_pool = require("../../assets/Pool/enemy_pool.json");
 
 // 控制生成物品品质
 // rate为奖励池品质
@@ -34,4 +35,32 @@ export function lootMagic(rate){
     let randomId = Math.floor(Math.random() * ((magic_pool[quality]).length));
     (magic_pool[quality])[randomId].quality = quality;
     return (magic_pool[quality])[randomId];
+}
+
+function summonEnemy(difficult){
+    let randomId = Math.floor(Math.random() * ((enemy_pool[difficult]).length));
+    return (enemy_pool[difficult])[randomId]
+}
+
+export function summonEnemyList(difficult){
+    let res = [];
+    let randomNum = Math.random() * 100;
+    switch(difficult){
+        case 'normal':
+            for(let i = 0; i < Math.floor(Math.random() * 3); i++){
+                res.push(summonEnemy('normal'))
+            }
+            break;
+        case 'elite':
+            res.push(summonEnemy('elite'))
+            for(let i = 0; i < 2; i++){
+                if( randomNum > 80)
+                    res.push(summonEnemy('elite'))
+                else if(randomNum > 30)
+                    res.push(summonEnemy('normal'))
+                else
+                    return
+            }
+    }
+    return res;
 }
