@@ -5,11 +5,26 @@
         </div>
         <!-- 战斗地图 -->
         <div class="battle-map">
-            <character-name type="you">你</character-name>
-            <div class="enemy">
-                <character-name type="enemy" v-for="(enemy,index) in enemyList" :key="index">
-                    {{ enemy.name }}
-                </character-name>
+            <div>
+                <character type="you">
+                    你
+                </character>
+            </div>
+            <div>
+                <div class="enemy">
+                    <character
+                        v-for="(enemy,index) in enemyList"
+                        @died="enemyDied(index)"
+                        :stage="stage"
+                        :enemy="enemy"
+                        type="enemy"
+                        :key="index"
+                        :settlement="settlement"
+                        :magic="currentMagic"
+                        >
+                        {{ enemy.name }}
+                    </character>
+                </div>
             </div>
         </div>
         <div class="health-bar">
@@ -43,11 +58,11 @@
     </div>
 </template>
 <script>
-import CharacterName from './CharacterName.vue';
+import Character from './Character.vue';
 import wand from './wand.js'
-import { lootMagic } from './utils.js';
+import { lootMagic, summonEnemyList } from './utils.js';
 export default {
-    components: { CharacterName },
+    components: { Character },
     name:'inGamePage',
     data(){
         return {
@@ -62,6 +77,8 @@ export default {
             wand:new wand(),
             magicPool:[],
             stage:0,
+            currentMagic:{},
+            settlement:false,
         }
     },
     methods:{
@@ -80,6 +97,7 @@ export default {
             for(let i = 0; i < 5; i++){
                 this.lootList.push(lootMagic('normal'));
             }
+            this.summonEnemy()
         },
         win(){
             this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
@@ -90,9 +108,22 @@ export default {
             this.isLoot = false;
         },
         useMagic(item){
+            if(this.mana - item.MP >= 0){
+                this.mana -= item.MP;
+            }else{
+                this.$Message.error('魔力不足喵')
+                return
+            }
+            this.currentMagic = item;
+            this.settlement = true;
             console.log(item)
-            this.mana -= item.MP;
-        }
+        },
+        summonEnemy() {
+            this.enemyList.push(...summonEnemyList('normal'));
+        },
+        enemyDied(index){
+            this.enemyList.splice(index,1)
+        },
     },
     computed:{
         isEnd(){
@@ -102,10 +133,6 @@ export default {
             }
             return res
         },
-        // enemyList(){
-        //     let res = [];
-        //     return res;
-        // }
     },
     mounted(){
         this.initGame();

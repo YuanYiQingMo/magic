@@ -47,9 +47,11 @@ export function summonEnemyList(difficult){
     let randomNum = Math.random() * 100;
     switch(difficult){
         case 'normal':
-            for(let i = 0; i < Math.floor(Math.random() * 3); i++){
+            for(let i = 0; i < Math.floor(Math.random() * 3) + 1; i++){
                 res.push(summonEnemy('normal'))
             }
+            if(randomNum < 3)
+                res.push(summonEnemy('elite'))
             break;
         case 'elite':
             res.push(summonEnemy('elite'))
@@ -59,8 +61,12 @@ export function summonEnemyList(difficult){
                 else if(randomNum > 30)
                     res.push(summonEnemy('normal'))
                 else
-                    return
+                    return res
             }
+            break;
+        case 'boss':
+            res.push(summonEnemy('boss'));
+            return res
     }
     return res;
 }
