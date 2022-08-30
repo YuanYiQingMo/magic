@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div @click="choose" :class="'character-name '+type+isChoose">
+        <div @click="attack" :class="'character-name '+type+isChoose">
             <slot></slot>
         </div>
         <div v-if="type == 'enemy'" class="HpBar">
-            {{ enemy.HP }}/{{ enemy.HP }}
+            {{ enemy.HP }}/{{ maxHP }}
         </div>
     </div>
 </template>
@@ -14,6 +14,7 @@ export default {
     data(){
         return {
             isChoose: '',
+            HP:0,
             maxHP: 0,
         }
     },
@@ -45,15 +46,14 @@ export default {
         }
     },
     methods:{
-        choose(){
-            if(this.isChoose == ''){
-                this.isChoose = ' choose';
-            }
-            else{
-                this.isChoose = '';
+        attack(){
+            if(this.settlement == true){
+                this.$emit('useMana',this.currentMagic.MP)
+                this.getDamage(this.currentMagic.damage);
             }
         },
         getDamage(damage){
+            console.log(this.enemy)
             if(this.enemy.HP - damage > 0){
                 this.enemy.HP -= damage;
             }else{
@@ -65,9 +65,9 @@ export default {
         }
     },
     mounted(){
-            if(this.type == 'enemy'){
+        if(this.type == 'enemy'){
             this.maxHP = this.enemy.HP * this.difficultModifier;
-            this.enemy.HP = this.maxHP;
+            this.HP = this.maxHP;
         }
     },
     computed:{
@@ -80,13 +80,6 @@ export default {
             return this.settlement;
         },
     },
-    watch: {
-        isSettlement(newV) {
-            if(newV == true){
-                this.getDamage(this.currentMagic.damage);
-            }
-        }
-    }
 }
 </script>
 <style scoped>

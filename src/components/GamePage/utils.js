@@ -36,12 +36,12 @@ export function lootMagic(rate){
     (magic_pool[quality])[randomId].quality = quality;
     return (magic_pool[quality])[randomId];
 }
-
+// 生成敌人
 function summonEnemy(difficult){
     let randomId = Math.floor(Math.random() * ((enemy_pool[difficult]).length));
-    return (enemy_pool[difficult])[randomId]
+    let res = (enemy_pool[difficult])[randomId];
+    return JSON.parse(JSON.stringify(res));
 }
-
 export function summonEnemyList(difficult){
     let res = [];
     let randomNum = Math.random() * 100;

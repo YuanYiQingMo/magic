@@ -21,6 +21,8 @@
                         :key="index"
                         :settlement="settlement"
                         :magic="currentMagic"
+                        @reloadSettlement="reload"
+                        @useMana="useMana"
                         >
                         {{ enemy.name }}
                     </character>
@@ -35,9 +37,14 @@
         </div>
         <!--法杖 -->
         <div class="wand-editor">
-            <div class="wand-title">点击使用魔法</div>
+            <!-- <div class="wand-title">点击选择魔法</div> -->
             <div class="wand-bar">
-                <div v-for="(wandBox,index) in wand.magicBox" :class="'wandBox ' + wandBox.quality" :key="index" @click="useMagic(wandBox)">
+                <div
+                    v-for="(wandBox,index) in wand.magicBox"
+                    :class="'wandBox ' + wandBox.quality + (wandBox.magic_id == currentMagic.magic_id?' choose-magic':'')"
+                    :key="index"
+                    @click="useMagic(wandBox)"
+                    >
                     {{ wandBox.magic_name }}
                     <Poptip  trigger="hover" :title="wandBox.magic_name" :content="wandBox.magic_describe">
                         <Icon style="font-size: 24px" type="ios-information-circle-outline" />
@@ -79,6 +86,7 @@ export default {
             stage:0,
             currentMagic:{},
             settlement:false,
+            isChoose: false,
         }
     },
     methods:{
@@ -97,33 +105,42 @@ export default {
             for(let i = 0; i < 5; i++){
                 this.lootList.push(lootMagic('normal'));
             }
-            this.summonEnemy()
+            this.summonEnemy();
+            this.currentMagic = this.wand.magicBox[0];
+            this.settlement = true;
         },
         win(){
             this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
             this.stage++;
         },
         addMagic(item){
-            this.wand.addMagic(item);
+            if(this.wand.addMagic(item) == -1){
+                return
+            }
             this.isLoot = false;
         },
         useMagic(item){
-            if(this.mana - item.MP >= 0){
-                this.mana -= item.MP;
-            }else{
-                this.$Message.error('魔力不足喵')
-                return
-            }
             this.currentMagic = item;
-            this.settlement = true;
-            console.log(item)
+            // console.log(item)
         },
         summonEnemy() {
-            this.enemyList.push(...summonEnemyList('normal'));
+            this.enemyList.push(...summonEnemyList('elite'));
         },
         enemyDied(index){
             this.enemyList.splice(index,1)
         },
+        reload(state){
+            this.settlement = state;
+        },
+        useMana(mana){
+            if(this.mana - mana >= 0){
+                this.mana -= mana;
+            }else{
+                this.settlement = false;
+                this.$Message.error('魔力不足喵')
+                return
+            }
+        }
     },
     computed:{
         isEnd(){
@@ -191,6 +208,10 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.choose-magic{
+    border: solid red 4px;
+    margin: 1px;
 }
 // 品质颜色
 </style>
