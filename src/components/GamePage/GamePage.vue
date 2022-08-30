@@ -5,35 +5,41 @@
         </div>
         <!-- 战斗地图 -->
         <div class="battle-map">
-            <div>
-                <character type="you">
-                    你
-                </character>
+            <div style="display:flex;justify-content: space-between">
+                <div>
+                    <character type="you" :you="you">
+                        你
+                    </character>
+                </div>
+                <div>
+                    <div class="enemy">
+                        <character
+                            v-for="enemy in enemyList"
+                            @died="enemyDied(enemy.id)"
+                            :stage="stage"
+                            :enemy="enemy"
+                            type="enemy"
+                            :key="enemy.id"
+                            :settlement="settlement"
+                            :magic="currentMagic"
+                            @useMana="useMana"
+                            >
+                            {{ enemy.name }}
+                        </character>
+                    </div>
+                </div>
             </div>
             <div>
-                <div class="enemy">
-                    <character
-                        v-for="(enemy,index) in enemyList"
-                        @died="enemyDied(index)"
-                        :stage="stage"
-                        :enemy="enemy"
-                        type="enemy"
-                        :key="index"
-                        :settlement="settlement"
-                        :magic="currentMagic"
-                        @reloadSettlement="reload"
-                        @useMana="useMana"
-                        >
-                        {{ enemy.name }}
-                    </character>
+                <div class="health-bar">
+                    HP：{{ you.health }}/{{ you.maxHealth }}
+                </div>
+                <div class="MP-bar">
+                    MP：{{ you.mana }}/{{ you.maxMana }}
                 </div>
             </div>
         </div>
-        <div class="health-bar">
-            HP：{{ health }}/{{ maxHealth }}
-        </div>
-        <div class="MP-bar">
-            MP：{{ mana }}/{{ maxMana }}
+        <div class="round-ended" @click="nextRound">
+            结束回合
         </div>
         <!--法杖 -->
         <div class="wand-editor">
@@ -74,10 +80,12 @@ export default {
     data(){
         return {
             score: 0,
-            mana:50,
-            maxMana:50,
-            health:30,
-            maxHealth:30,
+            you:{
+                mana:50,
+                maxMana:50,
+                health:30,
+                maxHealth:30,
+            },
             enemyList:[],
             isLoot:true,
             lootList:[],
@@ -85,7 +93,6 @@ export default {
             magicPool:[],
             stage:0,
             currentMagic:{},
-            settlement:false,
             isChoose: false,
         }
     },
@@ -96,8 +103,8 @@ export default {
         },
         initGame(){
             this.score = 0;
-            this.health = 30;
-            this.maxHealth = 30;
+            this.you.health = 30;
+            this.you.maxHealth = 30;
             this.lootList = [];
             this.magicPool = [];
             this.stage = 0;
@@ -107,7 +114,6 @@ export default {
             }
             this.summonEnemy();
             this.currentMagic = this.wand.magicBox[0];
-            this.settlement = true;
         },
         win(){
             this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
@@ -126,30 +132,44 @@ export default {
         summonEnemy() {
             this.enemyList.push(...summonEnemyList('elite'));
         },
-        enemyDied(index){
-            this.enemyList.splice(index,1)
-        },
-        reload(state){
-            this.settlement = state;
+        enemyDied(id){
+            for(let i =0; i < this.enemyList.length; i++){
+                if(this.enemyList[i].id == id){
+                    this.enemyList.splice(i,1);
+                    i--;
+                }
+            }
         },
         useMana(mana){
-            if(this.mana - mana >= 0){
-                this.mana -= mana;
+            if(this.you.mana - mana >= 0){
+                this.you.mana -= mana;
             }else{
-                this.settlement = false;
-                this.$Message.error('魔力不足喵')
+                this.$Message.error('魔力不足喵');
                 return
+            }
+        },
+        nextRound(){
+            this.you.mana = this.you.maxMana;
+            for(let item of this.enemyList){
+                this.you.health -= item.atk;
             }
         }
     },
     computed:{
         isEnd(){
             let res = false;
-            if(this.health <= 0){
+            if(this.you.health <= 0){
                 res = true;
             }
             return res
         },
+        settlement(){
+            let res = true;
+            if(this.you.mana <= 0){
+                res = false;
+            }
+            return res
+        }
     },
     mounted(){
         this.initGame();
@@ -162,6 +182,7 @@ export default {
 }
 .battle-map {
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
     border: solid black 1px;
     min-height: 300px;
@@ -212,6 +233,13 @@ export default {
 .choose-magic{
     border: solid red 4px;
     margin: 1px;
+}
+.round-ended{
+    margin: 12px auto;
+    border: black solid 1px;
+    width: 30%;
+    padding: 12px;
+    border-radius: 24px;
 }
 // 品质颜色
 </style>

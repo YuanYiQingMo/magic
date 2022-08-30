@@ -19,6 +19,9 @@ export default {
         }
     },
     props:{
+        you:{
+            type:Object,
+        },
         type: {
             type:String
         },
@@ -47,13 +50,16 @@ export default {
     },
     methods:{
         attack(){
-            if(this.settlement == true){
+            if(this.type == 'enemy'){
                 this.$emit('useMana',this.currentMagic.MP)
-                this.getDamage(this.currentMagic.damage);
+                if(this.settlement == true){
+                    this.getDamage(this.currentMagic.damage);
+                }
+            }else{
+                this.getDamageP(1)
             }
         },
         getDamage(damage){
-            console.log(this.enemy)
             if(this.enemy.HP - damage > 0){
                 this.enemy.HP -= damage;
             }else{
@@ -62,6 +68,9 @@ export default {
         },
         died(){
             this.$emit('died');
+        },
+        getDamageP(damage){
+            this.you.health -= damage;
         }
     },
     mounted(){
