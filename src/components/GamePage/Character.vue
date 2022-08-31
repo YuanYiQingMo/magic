@@ -1,23 +1,18 @@
 <template>
     <div>
-        <div @click="attack" :class="'character-name '+type+isChoose">
+        <div @click="attack" :class="'character-name '+type">
             <slot></slot>
         </div>
         <div v-if="type == 'enemy'" class="HpBar">
-            {{ enemy.HP }}/{{ maxHP }}
+            {{ enemy.HP }}/{{ enemy.maxHP }}
         </div>
     </div>
 </template>
 <script>
+import enemy from './enemy';
+import magic from './magic'
 export default {
     name:'Character',
-    data(){
-        return {
-            isChoose: '',
-            HP:0,
-            maxHP: 0,
-        }
-    },
     props:{
         you:{
             type:Object,
@@ -26,7 +21,7 @@ export default {
             type:String
         },
         enemy: {
-            type:Object
+            type:enemy
         },
         stage: {
             type:Number
@@ -34,40 +29,20 @@ export default {
         settlement: {
             type:Boolean
         },
-        currentMagic: {
-            type:Object,
-            default:() => {
-                return{
-                    magic_id: 40001,
-                    magic_name: "大大大火球术",
-                    magic_effect_id: [1, 2],
-                    MP:10,
-                    damage:4,
-                    magic_describe:"很牛逼的攻击魔法"
-                }
-            }
+        magic: {
+            type:magic
         }
     },
     methods:{
         attack(){
             if(this.type == 'enemy'){
-                this.$emit('useMana',this.currentMagic.MP)
-                if(this.settlement == true){
-                    this.getDamage(this.currentMagic.damage);
+                if(this.settlement){
+                    this.enemy.getDamage(this.magic.damage);
                 }
             }else{
                 this.getDamageP(1)
             }
-        },
-        getDamage(damage){
-            if(this.enemy.HP - damage > 0){
-                this.enemy.HP -= damage;
-            }else{
-                this.died()
-            }
-        },
-        died(){
-            this.$emit('died');
+            this.$emit('useMana',this.magic.MP)
         },
         getDamageP(damage){
             this.you.health -= damage;
@@ -75,20 +50,9 @@ export default {
     },
     mounted(){
         if(this.type == 'enemy'){
-            this.maxHP = this.enemy.HP * this.difficultModifier;
-            this.HP = this.maxHP;
+            this.enemy.difficultModifier(this.stage)
         }
-    },
-    computed:{
-        difficultModifier(){
-            let modifier = 1;
-            modifier = 1 + this.stage / 10;
-            return modifier;
-        },
-        isSettlement(){
-            return this.settlement;
-        },
-    },
+    }
 }
 </script>
 <style scoped>

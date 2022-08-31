@@ -30,11 +30,14 @@ export function randomRate(rate){
 }
 
 // 生成魔法
+import magic from './magic.js';
 export function lootMagic(rate){
     let quality = randomRate(rate);
     let randomId = Math.floor(Math.random() * ((magic_pool[quality]).length));
     (magic_pool[quality])[randomId].quality = quality;
-    return (magic_pool[quality])[randomId];
+    let magicData = (magic_pool[quality])[randomId];
+    let res = new magic(magicData);
+    return res;
 }
 // 生成敌人
 import enemy from './enemy.js'
@@ -46,7 +49,7 @@ function summonEnemy(difficult){
     enemyData.id = enemyCount;
     enemyCount++;
     let res = new enemy(enemyData);
-    console.log(res)
+    // console.log(res)
     return res
 }
 export function summonEnemyList(difficult){

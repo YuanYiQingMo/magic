@@ -1,5 +1,7 @@
 import { Message } from "view-design";
-const DEFAULT_MAGIC = require('../../assets/Pool/magic_pool.json').Tier1[0];
+import magic from './magic.js';
+let default_magic_data = require('../../assets/Pool/magic_pool.json').Tier1[0];
+const DEFAULT_MAGIC = new magic(default_magic_data)
 const DEFAULT_MAX_LENGTH = 4;
 
 class wand{
@@ -10,7 +12,6 @@ class wand{
     addMagic(item){
         if(this.magicBox.length < this.magicMaxLength){
             for(let magic of this.magicBox){
-                console.log(item,magic)
                 if(item.magic_id == magic.magic_id){
                     Message.error('不能选择两个相同的魔法')
                     return -1;
@@ -25,7 +26,7 @@ class wand{
         this.magicBox.splice(index, 1);
     }
     updateWand(maxLength){
-        this.magicMaxLength = maxLength;
+        this.magicMaxLength += maxLength;
     }
     reload(){
         this.magicBox = [DEFAULT_MAGIC];
@@ -33,4 +34,4 @@ class wand{
     }
 }
 
-export default wand
+export default wand;

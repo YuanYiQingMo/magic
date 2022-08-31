@@ -15,13 +15,12 @@
                     <div class="enemy">
                         <character
                             v-for="enemy in enemyList"
-                            @died="enemyDied(enemy.id)"
                             :stage="stage"
                             :enemy="enemy"
                             type="enemy"
                             :key="enemy.id"
-                            :settlement="settlement"
                             :magic="currentMagic"
+                            :settlement="settlement"
                             @useMana="useMana"
                             >
                             {{ enemy.name }}
@@ -72,7 +71,7 @@
 </template>
 <script>
 import Character from './Character.vue';
-import wand from './wand.js'
+import wand from './wand.js';
 import { lootMagic, summonEnemyList } from './utils.js';
 export default {
     components: { Character },
@@ -115,10 +114,6 @@ export default {
             this.summonEnemy();
             this.currentMagic = this.wand.magicBox[0];
         },
-        win(){
-            this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
-            this.stage++;
-        },
         addMagic(item){
             if(this.wand.addMagic(item) == -1){
                 return
@@ -127,20 +122,38 @@ export default {
         },
         useMagic(item){
             this.currentMagic = item;
-            // console.log(item)
         },
         summonEnemy() {
-            this.enemyList.push(...summonEnemyList('elite'));
+            if(this.stage % 10 == 0 && this.stage != 0){
+                this.enemyList.push(...summonEnemyList('boss'))
+            }else if(this.stage > 50){
+                this.enemyList.push(...summonEnemyList('elite'));
+            }else{
+                Math.random() > 0.5 ? 
+                    this.enemyList.push(...summonEnemyList('elite')) :
+                    this.enemyList.push(...summonEnemyList('normal'))
+            }
         },
-        enemyDied(id){
+        checkEnemyDied(){
             for(let i =0; i < this.enemyList.length; i++){
-                if(this.enemyList[i].id == id){
+                if(this.enemyList[i].isDied){
                     this.enemyList.splice(i,1);
                     i--;
                 }
             }
         },
+        checkFightEnd(){
+            if(this.isFightWin()){
+                this.nextFight();
+            }
+        },
+        nextFight(){
+            this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
+            this.stage++;
+
+        },
         useMana(mana){
+            this.checkEnemyDied();
             if(this.you.mana - mana >= 0){
                 this.you.mana -= mana;
             }else{
@@ -165,10 +178,17 @@ export default {
         },
         settlement(){
             let res = true;
-            if(this.you.mana <= 0){
+            if(this.you.mana - this.currentMagic.MP <= 0){
                 res = false;
             }
             return res
+        },
+        isFightWin(){
+            let res = false;
+            if(this.enemyList){
+                res = true;
+            }
+            return res;
         }
     },
     mounted(){
