@@ -143,17 +143,19 @@ export default {
             }
         },
         checkFightEnd(){
-            if(this.isFightWin()){
+            if(this.isFightWin){
                 this.nextFight();
             }
         },
         nextFight(){
             this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
             this.stage++;
-
+            this.summonEnemy();
+            //TODO 添加反馈机制(变强)
         },
         useMana(mana){
             this.checkEnemyDied();
+            this.checkFightEnd();
             if(this.you.mana - mana >= 0){
                 this.you.mana -= mana;
             }else{
@@ -185,7 +187,8 @@ export default {
         },
         isFightWin(){
             let res = false;
-            if(this.enemyList){
+            console.log()
+            if(this.enemyList.length == 0){
                 res = true;
             }
             return res;
