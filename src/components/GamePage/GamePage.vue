@@ -1,7 +1,7 @@
 <template>
     <div class="in-game">
         <div class="score">
-            得分: {{ score }}
+            得分: {{ score }}   第 {{ stage }} 层
         </div>
         <!-- 战斗地图 -->
         <div class="battle-map">
@@ -59,7 +59,10 @@
         </div>
         <!-- 战利品获取 -->
         <div v-if="isLoot" class="loot-bar">
-            <div class="loot-title">选择其中一个魔法魔法</div>
+            <div class="heal" @click="addAttribute('heal')">加血</div>
+            <div class="heal" @click="addAttribute('maxHealth')">加血上限</div>
+            <div class="max-MP" @click="addAttribute('maxMana')">加魔法上限</div>
+            <div class="loot-title">或选择其中一个魔法魔法</div>
             <div class="loot-item-bar">
                 <div v-for="(item,index) in lootList" :class="'loot-item ' + item.quality" :key="index" @click="addMagic(item)">
                     {{ item.magic_name }}
@@ -86,7 +89,7 @@ export default {
                 maxHealth:30,
             },
             enemyList:[],
-            isLoot:true,
+            isLoot:false,
             lootList:[],
             wand:new wand(),
             magicPool:[],
@@ -114,12 +117,6 @@ export default {
             this.summonEnemy();
             this.currentMagic = this.wand.magicBox[0];
         },
-        addMagic(item){
-            if(this.wand.addMagic(item) == -1){
-                return
-            }
-            this.isLoot = false;
-        },
         useMagic(item){
             this.currentMagic = item;
         },
@@ -144,14 +141,59 @@ export default {
         },
         checkFightEnd(){
             if(this.isFightWin){
-                this.nextFight();
+                this.summonLoot();
             }
+        },
+        addAttribute(type){
+            switch(type){
+                case 'heal':
+                    this.you.health += 20
+                    if(this.you.health > this.you.maxHealth){
+                        this.you.health = this.you.maxHealth;
+                    }
+                    break;
+                case 'maxHealth':
+                    this.you.maxHealth += 5;
+                    this.you.health += 5;
+                    break;
+                case 'maxMana':
+                    this.you.maxMana += 10;
+                    break;
+            }
+            this.isLoot = false;
+            this.nextFight();
+        },
+        addMagic(item){
+            if(this.wand.addMagic(item) == -1){
+                return
+            }
+            this.isLoot = false;
+            this.nextFight();
         },
         nextFight(){
             this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
             this.stage++;
             this.summonEnemy();
-            //TODO 添加反馈机制(变强)
+            this.you.mana = this.you.maxMana;
+        },
+        summonLoot(){
+            this.lootList = [];
+            if(this.stage % 10 == 0 && this.stage != 0){
+                for(let i = 0; i < 3; i++){
+                    this.lootList.push(lootMagic('legend'));
+                }
+            }else if(this.stage > 50){
+                for(let i = 0; i < 5; i++){
+                    this.lootList.push(lootMagic('great'));
+                }
+            }else{
+                for(let i = 0; i < 5; i++){
+                    Math.random() > 0.3 ?
+                    this.lootList.push(lootMagic('normal')) :
+                    this.lootList.push(lootMagic('great'));
+                }
+            }
+            this.isLoot = true;
         },
         useMana(mana){
             this.checkEnemyDied();
@@ -180,14 +222,13 @@ export default {
         },
         settlement(){
             let res = true;
-            if(this.you.mana - this.currentMagic.MP <= 0){
+            if(this.you.mana - this.currentMagic.MP < 0){
                 res = false;
             }
             return res
         },
         isFightWin(){
             let res = false;
-            console.log()
             if(this.enemyList.length == 0){
                 res = true;
             }

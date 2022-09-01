@@ -3,8 +3,8 @@
         {
             "magic_id": 10001,
             "magic_name": "火球术",
-            "magic_effect_id": [1, 2],
-            "MP":6,
+            "magic_effect_id": [],
+            "MP":60,
             "damage":2,
             "magic_describe":"很牛逼的攻击魔法"
         }
@@ -46,6 +46,14 @@
             "magic_effect_id": [1, 2],
             "MP":20,
             "damage":10,
+            "magic_describe":"很牛逼的攻击魔法"
+        },
+        {
+            "magic_id": 50002,
+            "magic_name": "慧慧的炸裂魔法",
+            "magic_effect_id": [1, 2],
+            "MP":50,
+            "damage":50,
             "magic_describe":"很牛逼的攻击魔法"
         }
     ]
