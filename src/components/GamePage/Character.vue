@@ -2,8 +2,13 @@
     <div>
         <div @click="attack" :class="'character-name '+type">
             <slot></slot>
+            <br/>
+            <div style="font-size: 0.3rem">
+                ATK : {{ enemy.atk }}
+            </div>
         </div>
-        <div v-if="type == 'enemy'" class="HpBar">
+        <div v-if="type == 'enemy'" class="Hp-bar">
+            <div id="current-health" :style="healthPer"></div>
             {{ enemy.HP }}/{{ enemy.maxHP }}
         </div>
     </div>
@@ -37,7 +42,7 @@ export default {
         attack(){
             if(this.type == 'enemy'){
                 if(this.settlement){
-                    this.enemy.getDamage(this.magic.damage);
+                    this.enemy.getSettlement(this.magic);
                 }
             }else{
                 this.getDamageP(1)
@@ -52,12 +57,18 @@ export default {
         if(this.type == 'enemy'){
             this.enemy.difficultModifier(this.stage)
         }
+    },
+    computed:{
+        healthPer(){
+            return this.enemy.getHealthPer();
+        }
     }
 }
 </script>
 <style scoped>
 .character-name{
-    font-size: bolder;
+    font-size: 1.2rem;
+    font-weight: bold;
     cursor: pointer;
     margin: 12px 24px;
     padding: 10px;
@@ -67,5 +78,17 @@ export default {
 .choose{
     border: solid red 4px;
     margin: 8px 20px;
+}
+.Hp-bar{
+    position: relative;
+    margin: 12px auto;
+    width: 80%;
+    border: solid black 1px;
+}
+#current-health{
+    position: absolute;
+    background-color: rgb(214, 88, 88);
+    height: 100%;
+    z-index: -1;
 }
 </style>

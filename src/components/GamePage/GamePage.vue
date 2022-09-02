@@ -26,19 +26,36 @@
                             {{ enemy.name }}
                         </character>
                     </div>
+                    <!-- 战利品获取 -->
+                    <div v-if="isLoot" class="loot-bar">
+                        <div style="font-size:1rem; margin:12px 0">选取你的奖励</div>
+                        <div style="display: flex; justify-content: center">
+                            <div class="heal attribute" @click="addAttribute('heal')">加血 {{ stage % 10 == 0 ? 'x2' : '' }}</div>
+                            <div class="heal-max attribute" @click="addAttribute('maxHealth')">加血上限{{ stage % 10 == 0 ? 'x2' : '' }}</div>
+                            <div class="max-MP attribute" @click="addAttribute('maxMana')">加魔法上限{{ stage % 10 == 0 ? 'x2' : '' }}</div>
+                        </div>
+                        <div class="loot-title">或选择其中一个魔法</div>
+                        <div class="loot-item-bar">
+                            <div v-for="(item,index) in lootList" :class="'loot-item ' + item.quality" :key="index" @click="addMagic(item)">
+                                {{ item.magic_name }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div>
+            <div style="display: flex; justify-content: center">
                 <div class="health-bar">
+                    <div id="current-health" :style="healthPer"></div>
                     HP：{{ you.health }}/{{ you.maxHealth }}
                 </div>
-                <div class="MP-bar">
+                <div class="mana-bar">
+                    <div id="current-mana" :style="manaPer"></div>
                     MP：{{ you.mana }}/{{ you.maxMana }}
                 </div>
             </div>
         </div>
         <div class="round-ended" @click="nextRound">
-            结束回合
+            下一回合<br/>(回复魔力)
         </div>
         <!--法杖 -->
         <div class="wand-editor">
@@ -57,24 +74,13 @@
                 </div>
             </div>
         </div>
-        <!-- 战利品获取 -->
-        <div v-if="isLoot" class="loot-bar">
-            <div class="heal" @click="addAttribute('heal')">加血</div>
-            <div class="heal" @click="addAttribute('maxHealth')">加血上限</div>
-            <div class="max-MP" @click="addAttribute('maxMana')">加魔法上限</div>
-            <div class="loot-title">或选择其中一个魔法魔法</div>
-            <div class="loot-item-bar">
-                <div v-for="(item,index) in lootList" :class="'loot-item ' + item.quality" :key="index" @click="addMagic(item)">
-                    {{ item.magic_name }}
-                </div>
-            </div>
-        </div>
         <Button v-if="isEnd" type="primary" @click="endGame">结束游戏</Button>
     </div>
 </template>
 <script>
 import Character from './Character.vue';
 import wand from './wand.js';
+import you from './you.js'
 import { lootMagic, summonEnemyList } from './utils.js';
 export default {
     components: { Character },
@@ -82,12 +88,7 @@ export default {
     data(){
         return {
             score: 0,
-            you:{
-                mana:50,
-                maxMana:50,
-                health:30,
-                maxHealth:30,
-            },
+            you:new you(),
             enemyList:[],
             isLoot:false,
             lootList:[],
@@ -109,7 +110,7 @@ export default {
             this.you.maxHealth = 30;
             this.lootList = [];
             this.magicPool = [];
-            this.stage = 0;
+            this.stage = 1;
             this.wand.reload();
             for(let i = 0; i < 5; i++){
                 this.lootList.push(lootMagic('normal'));
@@ -147,17 +148,13 @@ export default {
         addAttribute(type){
             switch(type){
                 case 'heal':
-                    this.you.health += 20
-                    if(this.you.health > this.you.maxHealth){
-                        this.you.health = this.you.maxHealth;
-                    }
+                    this.you.heal(this.stage % 10 == 0 ? 40 : 20);
                     break;
                 case 'maxHealth':
-                    this.you.maxHealth += 5;
-                    this.you.health += 5;
+                    this.you.healMax(this.stage % 10 == 0 ? 10 : 5)
                     break;
                 case 'maxMana':
-                    this.you.maxMana += 10;
+                    this.you.manaMax(this.stage % 10 == 0 ? 8 : 16);
                     break;
             }
             this.isLoot = false;
@@ -233,6 +230,12 @@ export default {
                 res = true;
             }
             return res;
+        },
+        manaPer(){
+            return this.you.getManaPer();
+        },
+        healthPer(){
+            return this.you.getHealthPer();
         }
     },
     mounted(){
@@ -275,6 +278,10 @@ export default {
     align-items: center;
     justify-content: space-evenly;
 }
+.loot-title{
+    font-size: 1.2rem;
+    margin: 12px 0;
+}
 .loot-bar{
     display: flex;
     flex-direction: column;
@@ -294,6 +301,30 @@ export default {
     align-items: center;
     justify-content: center;
 }
+.health-bar{
+    position: relative;
+    margin: 12px;
+    width: 40%;
+    border: solid black 1px;
+}
+#current-health{
+    position: absolute;
+    background-color: rgb(214, 88, 88);
+    height: 100%;
+    z-index: -1;
+}
+.mana-bar{
+    position: relative;
+    margin: 12px;
+    width: 40%;
+    border: solid black 1px;
+}
+#current-mana{
+    position: absolute;
+    background-color: rgb(103, 149, 235);
+    height: 100%;
+    z-index: -1;
+}
 .choose-magic{
     border: solid red 4px;
     margin: 1px;
@@ -304,6 +335,23 @@ export default {
     width: 30%;
     padding: 12px;
     border-radius: 24px;
+}
+.attribute{
+    margin: 0 12px;
+    border: black solid 1px;
+    width: 30%;
+    padding: 2px;
+    border-radius: 24px;
+    cursor: pointer;
+}
+.heal{
+    background-color: rgb(117, 223, 107);
+}
+.heal-max{
+    background-color: rgb(219, 103, 103);
+}
+.max-MP{
+    background-color: rgb(107, 125, 223);
 }
 // 品质颜色
 </style>

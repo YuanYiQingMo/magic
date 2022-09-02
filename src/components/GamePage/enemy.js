@@ -27,9 +27,16 @@ class enemy{
     }
     difficultModifier(stage){
         let modifier = 1;
-        modifier = 1 + stage / 10;
-        this.maxHP = this.HP * modifier;
-        this.HP = this.maxHP;
+        modifier = 1 + (stage - 1) / 10 * 2;
+        this.maxHP = Math.floor(this.HP * modifier);
+        this.HP = Math.floor(this.maxHP);
+    }
+    getSettlement(magic){
+        this.getDamage(magic.damage)
+    }
+    getHealthPer(){
+        let res =this.HP / this.maxHP * 100;
+        return `width: ${res}%;`
     }
 }
 

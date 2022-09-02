@@ -4,7 +4,7 @@
             "magic_id": 10001,
             "magic_name": "火球术",
             "magic_effect_id": [],
-            "MP":60,
+            "MP":6,
             "damage":2,
             "magic_describe":"很牛逼的攻击魔法"
         }
@@ -35,7 +35,7 @@
             "magic_name": "大大大火球术",
             "magic_effect_id": [1, 2],
             "MP":15,
-            "damage":8,
+            "damage":12,
             "magic_describe":"很牛逼的攻击魔法"
         }
     ],
@@ -44,8 +44,8 @@
             "magic_id": 50001,
             "magic_name": "大大大大火球术",
             "magic_effect_id": [1, 2],
-            "MP":20,
-            "damage":10,
+            "MP":10,
+            "damage":20,
             "magic_describe":"很牛逼的攻击魔法"
         },
         {

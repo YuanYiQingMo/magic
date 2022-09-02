@@ -12,7 +12,7 @@ class magic{
             this.quality = 'Tier1';
         }
     }
-
+    
 }
 
 export default magic;
