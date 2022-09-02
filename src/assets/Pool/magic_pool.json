@@ -2,18 +2,34 @@
     "Tier1": [
         {
             "magic_id": 10001,
-            "magic_name": "火球术",
-            "magic_effect_id": [],
+            "magic_name": "小火球术",
+            "magic_effect": [],
             "MP":6,
             "damage":2,
-            "magic_describe":"很牛逼的攻击魔法"
+            "magic_describe":"点个火而已"
+        },
+        {
+            "magic_id": 10002,
+            "magic_name": "冰冻法术",
+            "magic_effect": ["lowFreeze"],
+            "MP":8,
+            "damage":3,
+            "magic_describe":"好像能把怪物冻起来,但也不一定"
+        },
+        {
+            "magic_id": 10003,
+            "magic_name": "飞弹",
+            "magic_effect": ["lowDodge"],
+            "MP":10,
+            "damage":20,
+            "magic_describe":"虽然伤害很高,但是他的命中率就像你的小帮手一样"
         }
     ],
     "Tier2": [
         {
             "magic_id": 20001,
-            "magic_name": "大火球术",
-            "magic_effect_id": [1, 2],
+            "magic_name": "火球术",
+            "magic_effect": [],
             "MP":8,
             "damage":4,
             "magic_describe":"很牛逼的攻击魔法"
@@ -22,8 +38,8 @@
     "Tier3": [
         {
             "magic_id": 30001,
-            "magic_name": "大大火球术",
-            "magic_effect_id": [1, 2],
+            "magic_name": "大火球术",
+            "magic_effect": [],
             "MP":10,
             "damage":6,
             "magic_describe":"很牛逼的攻击魔法"
@@ -32,8 +48,8 @@
     "Tier4": [
         {
             "magic_id": 40001,
-            "magic_name": "大大大火球术",
-            "magic_effect_id": [1, 2],
+            "magic_name": "大大火球术",
+            "magic_effect": [],
             "MP":15,
             "damage":12,
             "magic_describe":"很牛逼的攻击魔法"
@@ -42,8 +58,8 @@
     "Tier5": [
         {
             "magic_id": 50001,
-            "magic_name": "大大大大火球术",
-            "magic_effect_id": [1, 2],
+            "magic_name": "大大大火球术",
+            "magic_effect": [],
             "MP":10,
             "damage":20,
             "magic_describe":"很牛逼的攻击魔法"
@@ -51,10 +67,18 @@
         {
             "magic_id": 50002,
             "magic_name": "慧慧的炸裂魔法",
-            "magic_effect_id": [1, 2],
+            "magic_effect": [],
             "MP":50,
             "damage":50,
             "magic_describe":"很牛逼的攻击魔法"
+        },
+        {
+            "magic_id": 50002,
+            "magic_name": "五光十色的灿烂",
+            "magic_effect": ["RGB"],
+            "MP":5,
+            "damage":1,
+            "magic_describe":"完全没什么卵用的魔法,但是他是RGB啊!"
         }
     ]
 }

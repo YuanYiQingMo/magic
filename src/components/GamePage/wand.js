@@ -2,7 +2,7 @@ import { Message } from "view-design";
 import magic from './magic.js';
 let default_magic_data = require('../../assets/Pool/magic_pool.json').Tier1[0];
 const DEFAULT_MAGIC = new magic(default_magic_data)
-const DEFAULT_MAX_LENGTH = 4;
+const DEFAULT_MAX_LENGTH = 10;
 
 class wand{
     constructor(){

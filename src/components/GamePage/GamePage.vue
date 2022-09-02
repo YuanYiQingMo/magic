@@ -5,13 +5,14 @@
         </div>
         <!-- 战斗地图 -->
         <div class="battle-map">
-            <div style="display:flex;justify-content: space-between">
-                <div>
-                    <character type="you" :you="you">
+            <div style="display:flex;justify-content: space-around">
+                <div v-if="isEnd" class="end-game" @click="endGame">寄</div>
+                <div class="you"  v-if="!isEnd">
+                    <you-character :you="you" :stage="stage" :magic="currentMagic" :settlement="settlement">
                         你
-                    </character>
+                    </you-character>
                 </div>
-                <div>
+                <div  v-if="!isEnd">
                     <div class="enemy">
                         <character
                             v-for="enemy in enemyList"
@@ -22,6 +23,7 @@
                             :magic="currentMagic"
                             :settlement="settlement"
                             @useMana="useMana"
+                            class="single-enemy"
                             >
                             {{ enemy.name }}
                         </character>
@@ -68,23 +70,36 @@
                     @click="useMagic(wandBox)"
                     >
                     {{ wandBox.magic_name }}
-                    <Poptip  trigger="hover" :title="wandBox.magic_name" :content="wandBox.magic_describe">
+                    <Poptip  trigger="hover" :title="wandBox.magic_name">
                         <Icon style="font-size: 24px" type="ios-information-circle-outline" />
+                        <div slot="content">
+                            <div class="magic-describe">
+                                <div class="describe">
+                                    {{'消耗魔力:'+wand.magicBox[0].MP}}
+                                </div>
+                                <div class="describe">
+                                    {{'伤害:'+wand.magicBox[0].damage}}
+                                </div>
+                                <div class="describe">
+                                    {{wand.magicBox[0].magic_describe}}
+                                </div>
+                            </div>
+                        </div>
                     </Poptip>
                 </div>
             </div>
         </div>
-        <Button v-if="isEnd" type="primary" @click="endGame">结束游戏</Button>
     </div>
 </template>
 <script>
 import Character from './Character.vue';
 import wand from './wand.js';
 import you from './you.js'
+import youCharacter from './YouCharacter'
 import { lootMagic, summonEnemyList } from './utils.js';
 export default {
-    components: { Character },
-    name:'inGamePage',
+    components: { Character, youCharacter },
+    name:'GamePage',
     data(){
         return {
             score: 0,
@@ -102,7 +117,7 @@ export default {
     methods:{
         endGame(){
             this.initGame();
-            this.$emit('click',3)
+            this.$emit('click',3);
         },
         initGame(){
             this.score = 0;
@@ -170,6 +185,7 @@ export default {
         nextFight(){
             this.score += (Math.pow(10,Math.floor(this.stage / 10)) * (this.stage % 10) );
             this.stage++;
+            this.$emit('getScore',this.score);
             this.summonEnemy();
             this.you.mana = this.you.maxMana;
         },
@@ -205,7 +221,7 @@ export default {
         nextRound(){
             this.you.mana = this.you.maxMana;
             for(let item of this.enemyList){
-                this.you.health -= item.atk;
+                this.you.health -= item.Active();
             }
         }
     },
@@ -236,7 +252,7 @@ export default {
         },
         healthPer(){
             return this.you.getHealthPer();
-        }
+        },
     },
     mounted(){
         this.initGame();
@@ -254,10 +270,12 @@ export default {
     border: solid black 1px;
     min-height: 300px;
 }
-.enemy {
+.enemy,.you{
     display: flex;
 }
-
+// .single-enemy{
+//     width: 30%;
+// }
 .wand-bar {
     display: flex;
     flex-direction: row;
@@ -352,6 +370,23 @@ export default {
 }
 .max-MP{
     background-color: rgb(107, 125, 223);
+}
+.magic-describe{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.describe{
+    display: flex;
+    justify-content: flex-start;
+}
+.end-game{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
+    color: rgb(185, 24, 24);
+    cursor: pointer;
 }
 // 品质颜色
 </style>
