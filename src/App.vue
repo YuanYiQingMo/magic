@@ -1,13 +1,14 @@
 <template>
     <div id="app">
-        <start-page v-if="gameStatue == 1" @click="changeStatue"></start-page>
+        <start-page class="page" v-if="gameStatue == 1" @click="changeStatue"></start-page>
         <game-page
-            class="game-page"
+            class="game-page page"
             v-if="gameStatue == 2"
             @click="changeStatue"
             @getScore="getScoreE"
         ></game-page>
         <end-page
+            class="page"
             :score="score"
             v-if="gameStatue == 3"
             @click="changeStatue"
@@ -46,9 +47,14 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    display: flex;
+    justify-content: center;
 }
 .game-page {
     max-width: 600px;
     margin: 0 auto;
+}
+.page{
+    min-width: 400px;
 }
 </style>

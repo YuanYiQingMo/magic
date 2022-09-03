@@ -6,7 +6,10 @@
         <!-- 战斗地图 -->
         <div class="battle-map">
             <div style="display:flex;justify-content: space-around">
-                <div v-if="isEnd" class="end-game" @click="endGame">寄</div>
+                <div v-if="isEnd" class="end-game" @click="endGame">
+                    <div>寄</div>
+                    <div style="font-size: 1rem; color: black;">点击结束本局游戏</div>
+                </div>
                 <div class="you"  v-if="!isEnd">
                     <you-character :you="you" :stage="stage" :magic="currentMagic" :settlement="settlement">
                         你
@@ -75,13 +78,13 @@
                         <div slot="content">
                             <div class="magic-describe">
                                 <div class="describe">
-                                    {{'消耗魔力:'+wand.magicBox[0].MP}}
+                                    {{'消耗魔力:'+wand.magicBox[index].MP}}
                                 </div>
                                 <div class="describe">
-                                    {{'伤害:'+wand.magicBox[0].damage}}
+                                    {{'伤害:'+wand.magicBox[index].damage}}
                                 </div>
                                 <div class="describe">
-                                    {{wand.magicBox[0].magic_describe}}
+                                    {{wand.magicBox[index].magic_describe}}
                                 </div>
                             </div>
                         </div>
@@ -219,9 +222,11 @@ export default {
             }
         },
         nextRound(){
-            this.you.mana = this.you.maxMana;
-            for(let item of this.enemyList){
-                this.you.health -= item.Active();
+            if(!this.isEnd){
+                this.you.mana = this.you.maxMana;
+                for(let item of this.enemyList){
+                    this.you.health -= item.Active();
+                }
             }
         }
     },
@@ -353,6 +358,7 @@ export default {
     width: 30%;
     padding: 12px;
     border-radius: 24px;
+    cursor: pointer;
 }
 .attribute{
     margin: 0 12px;
@@ -382,6 +388,7 @@ export default {
 }
 .end-game{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 5rem;
