@@ -62,7 +62,7 @@
         <div class="wand-editor">
             <div class="wand-bar">
                 <div class="wand-title">点击选切换魔法</div>
-                <div>
+                <div style="display: flex; flex-direction: row;flex-wrap: wrap;">
                     <div
                         v-for="(wandBox,index) in wand.magicBox"
                         :class="'wandBox ' + wandBox.quality + (wandBox.magic_id == currentMagic.magic_id?' choose-magic':'')"
