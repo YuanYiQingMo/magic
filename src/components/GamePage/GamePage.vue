@@ -5,15 +5,11 @@
         </div>
         <!-- 战斗地图 -->
         <div class="battle-map">
-            <div style="display:flex;justify-content: space-around">
+            <div v-if="stage == 1" class="new-guide">点击敌人施放魔法</div>
+            <div style="display:flex;justify-content: space-around;margin-top: 8px;">
                 <div v-if="isEnd" class="end-game" @click="endGame">
                     <div>寄</div>
                     <div style="font-size: 1rem; color: black;">点击结束本局游戏</div>
-                </div>
-                <div class="you"  v-if="!isEnd">
-                    <you-character :you="you" :stage="stage" :magic="currentMagic" :settlement="settlement">
-                        你
-                    </you-character>
                 </div>
                 <div  v-if="!isEnd">
                     <div class="enemy">
@@ -35,9 +31,9 @@
                     <div v-if="isLoot" class="loot-bar">
                         <div style="font-size:1rem; margin:12px 0">选取你的奖励</div>
                         <div style="display: flex; justify-content: center">
-                            <div class="heal attribute" @click="addAttribute('heal')">加血 {{ stage % 10 == 0 ? 'x2' : '' }}</div>
-                            <div class="heal-max attribute" @click="addAttribute('maxHealth')">加血上限{{ stage % 10 == 0 ? 'x2' : '' }}</div>
-                            <div class="max-MP attribute" @click="addAttribute('maxMana')">加魔法上限{{ stage % 10 == 0 ? 'x2' : '' }}</div>
+                            <div class="heal attribute" @click="addAttribute('heal')">回复血量 {{ stage % 10 == 0 ? 'x2' : '' }}</div>
+                            <div class="heal-max attribute" @click="addAttribute('maxHealth')">最大生命{{ stage % 10 == 0 ? 'x2' : '' }}</div>
+                            <div class="max-MP attribute" @click="addAttribute('maxMana')">最大法力{{ stage % 10 == 0 ? 'x2' : '' }}</div>
                         </div>
                         <div class="loot-title">或选择其中一个魔法</div>
                         <div class="loot-item-bar">
@@ -64,31 +60,34 @@
         </div>
         <!--法杖 -->
         <div class="wand-editor">
-            <!-- <div class="wand-title">点击选择魔法</div> -->
             <div class="wand-bar">
-                <div
-                    v-for="(wandBox,index) in wand.magicBox"
-                    :class="'wandBox ' + wandBox.quality + (wandBox.magic_id == currentMagic.magic_id?' choose-magic':'')"
-                    :key="index"
-                    @click="useMagic(wandBox)"
-                    >
-                    {{ wandBox.magic_name }}
-                    <Poptip  trigger="hover" :title="wandBox.magic_name">
-                        <Icon style="font-size: 24px" type="ios-information-circle-outline" />
-                        <div slot="content">
-                            <div class="magic-describe">
-                                <div class="describe">
-                                    {{'消耗魔力:'+wand.magicBox[index].MP}}
-                                </div>
-                                <div class="describe">
-                                    {{'伤害:'+wand.magicBox[index].damage}}
-                                </div>
-                                <div class="describe">
-                                    {{wand.magicBox[index].magic_describe}}
+                <div class="wand-title">点击选切换魔法</div>
+                <div>
+                    <div
+                        v-for="(wandBox,index) in wand.magicBox"
+                        :class="'wandBox ' + wandBox.quality + (wandBox.magic_id == currentMagic.magic_id?' choose-magic':'')"
+                        :key="index"
+                        @click="useMagic(wandBox)"
+                        >
+                        {{ wandBox.magic_name }}
+                        <Poptip  trigger="click" :title="wandBox.magic_name">
+                            <Icon style="font-size: 24px" type="ios-information-circle-outline" />
+                            <div slot="content">
+                                <div class="magic-describe">
+                                    <div class="describe">
+                                        {{'消耗魔力:'+wand.magicBox[index].MP}}
+                                    </div>
+                                    <div class="describe">
+                                        {{'伤害:'+wand.magicBox[index].damage}}
+                                    </div>
+                                    <div class="describe">
+                                        {{wand.magicBox[index].magic_describe}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </Poptip>
+                        </Poptip>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -98,10 +97,9 @@
 import Character from './Character.vue';
 import wand from './wand.js';
 import you from './you.js'
-import youCharacter from './YouCharacter'
 import { lootMagic, summonEnemyList } from './utils.js';
 export default {
-    components: { Character, youCharacter },
+    components: { Character },
     name:'GamePage',
     data(){
         return {
@@ -274,18 +272,23 @@ export default {
     justify-content: space-around;
     border: solid black 1px;
     min-height: 300px;
+    position: relative;
+}
+.new-guide{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
 }
 .enemy,.you{
     display: flex;
 }
-// .single-enemy{
-//     width: 30%;
-// }
 .wand-bar {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: flex-start;
     border: solid black 1px;
     min-height: 150px;
 }
@@ -294,7 +297,7 @@ export default {
     cursor: pointer;
     border: solid black 1px;
     border-radius: 10px;
-    width: 20%;
+    width: 40%;
     height: 50px;
     margin: 5px;
     display: flex;
@@ -312,14 +315,14 @@ export default {
 
 .loot-item-bar{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 .loot-item{
     cursor: pointer;
     border: solid black 1px;
     border-radius: 10px;
-    width: 60%;
-    margin: 5px;
+    width: 90%;
+    margin: 2px auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -353,15 +356,17 @@ export default {
     margin: 1px;
 }
 .round-ended{
-    margin: 12px auto;
+    margin: 4px auto;
     border: black solid 1px;
-    width: 30%;
-    padding: 12px;
+    width: 80%;
+    padding: 4px;
     border-radius: 24px;
     cursor: pointer;
+    font-size: small;
 }
 .attribute{
-    margin: 0 12px;
+    font-size: 2px;
+    margin: 0 2px;
     border: black solid 1px;
     width: 30%;
     padding: 2px;

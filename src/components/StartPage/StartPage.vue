@@ -29,7 +29,7 @@ export default {
 }
 .title{
     margin: 24px;
-    font-size: 4rem;
+    font-size: 3rem;
 }
 .little-title{
     display: flex;

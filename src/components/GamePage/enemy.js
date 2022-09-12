@@ -9,6 +9,7 @@ class enemy {
         this.heal = enemy.heal;
         this.buff = enemy.buff;
         this.describe = enemy.describe;
+        this.special = enemy.special;
         this.isDied = false;
         this.shield = 0;
         this.nextActive = "ATK";
@@ -47,6 +48,10 @@ class enemy {
     }
     nexRoundActive() {
         let activeNum = Math.random();
+        if (Math.random() > 0.9) {
+            this.special(this.spacial);
+            return;
+        }
         if (activeNum > 0.7 && this.buff.length == 0) {
             this.nextActive = "BUFF";
         } else if (activeNum > 0.4 && this.def) {
@@ -95,6 +100,15 @@ class enemy {
                             background-color:rgba(${red},${green},${blue},0.4) !important`;
         }
         this.getDamage(damage);
+    }
+    special(sp) {
+        switch (sp) {
+            case "change_boss":
+                this.atk += 10;
+                this.HP += 20;
+                this.maxHP += 20;
+                break;
+        }
     }
 }
 

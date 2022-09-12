@@ -6,12 +6,16 @@
             :style="enemy.RGB"
         >
             <slot></slot>
+            <div class="describe">{{enemy.describe}}</div>
             <br />
-            <div v-if="enemy.nextActive == 'ATK'" style="font-size: 0.3rem">
-                {{ `ATK:${enemy.atk}` }}
-            </div>
-            <div v-if="enemy.nextActive == 'DEF'" style="font-size: 0.3rem">
-                {{ `DEF:${enemy.def}` }}
+            <div>
+                <div style="font-size: 0.3rem; font-weight: 550;">下一回合</div>
+                <div v-if="enemy.nextActive == 'ATK'" style="font-size: 0.3rem; font-weight: 550;">
+                    {{ `攻击:${enemy.atk}` }}
+                </div>
+                <div v-if="enemy.nextActive == 'DEF'" style="font-size: 0.3rem; font-weight: 550;">
+                    {{ `防御:${enemy.def}` }}
+                </div>
             </div>
             <!-- TODO 添加buff -->
             <!-- <div v-if="enemy.nextActive == 'BUFF'" style="font-size: 0.3rem">
@@ -74,15 +78,19 @@ export default {
 };
 </script>
 <style scoped>
+.describe{
+    font-size: 2px;
+    font-weight: 400;   
+}
 .warper {
     width: 100%;
 }
 .character-name {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
     margin: 12px 6px;
-    padding: 10px;
+    padding: 4px;
     height: 80%;
     border: solid black 1px;
     border-radius: 12px;

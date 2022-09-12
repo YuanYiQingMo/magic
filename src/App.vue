@@ -55,6 +55,6 @@ export default {
     margin: 0 auto;
 }
 .page{
-    min-width: 400px;
+    min-width: 200px;
 }
 </style>
