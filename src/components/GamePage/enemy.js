@@ -30,6 +30,9 @@ class enemy {
     difficultModifier(stage) {
         let modifier = 1;
         modifier = 1 + ((stage - 1) / 10) * 2;
+        if(stage > 100){
+            modifier += stage;
+        }
         this.maxHP = Math.floor(this.HP * modifier);
         this.HP = Math.floor(this.maxHP);
     }
@@ -83,9 +86,14 @@ class enemy {
             case "lowFreeze":
                 Math.random() > 0.9
                     ? this.getDamage(damage)
-                    : this.getDamage(damage),
-                    (this.describe += "冻住了,随便打"),
-                    (this.atk = 0);
+                    : (this.getDamage(damage),
+                    (this.describe += "(冻住了,随便打)"),
+                    (this.atk = 0));
+                break;
+            case "HighFreeze":
+                this.getDamage(damage)
+                this.describe += "(冻住了,随便打)"
+                this.atk = 0;
                 break;
             case "lowDodge":
                 if (Math.random() > 0.2) {
@@ -98,6 +106,11 @@ class enemy {
                 var blue = Math.floor(Math.random() * 255);
                 this.RGB = `color: rgb(${red},${green},${blue}) !important;
                             background-color:rgba(${red},${green},${blue},0.4) !important`;
+                break;
+            case "debug":
+                console.log('扣1送毁天灭地大魔法术');
+                alert('不许用');
+                break;
         }
         this.getDamage(damage);
     }

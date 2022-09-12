@@ -61,6 +61,14 @@
             "MP": 15,
             "damage": 12,
             "magic_describe": "超级大的火球,伤害也就那样"
+        },
+        {
+            "magic_id": 40002,
+            "magic_name": "测试法球",
+            "magic_effect": ["debug"],
+            "MP": 0,
+            "damage": 6,
+            "magic_describe": "debug用品,请勿多次使用"
         }
     ],
     "Tier5": [
@@ -76,17 +84,25 @@
             "magic_id": 50002,
             "magic_name": "慧慧的炸裂魔法",
             "magic_effect": [],
-            "MP": 50,
-            "damage": 50,
+            "MP": 150,
+            "damage": 600,
             "magic_describe": "慧慧耗费全部魔力的一击!使用后会扬威"
         },
         {
-            "magic_id": 50002,
+            "magic_id": 50003,
             "magic_name": "五光十色的灿烂",
             "magic_effect": ["RGB"],
             "MP": 5,
             "damage": 1,
             "magic_describe": "完全没什么卵用的魔法,但是他是RGB啊!"
+        },
+        {
+            "magic_id": 50004,
+            "magic_name": "高级冰冻术",
+            "magic_effect": ["HighFreeze"],
+            "MP": 20,
+            "damage": 10,
+            "magic_describe": "冰冻术终将降下他的神罚"
         }
     ]
 }

@@ -31,9 +31,9 @@
                     <div v-if="isLoot" class="loot-bar">
                         <div style="font-size:1rem; margin:12px 0">选取你的奖励</div>
                         <div style="display: flex; justify-content: center">
-                            <div class="heal attribute" @click="addAttribute('heal')">回复血量 {{ stage % 10 == 0 ? 'x2' : '' }}</div>
-                            <div class="heal-max attribute" @click="addAttribute('maxHealth')">最大生命{{ stage % 10 == 0 ? 'x2' : '' }}</div>
-                            <div class="max-MP attribute" @click="addAttribute('maxMana')">最大法力{{ stage % 10 == 0 ? 'x2' : '' }}</div>
+                            <div class="heal attribute" @click="addAttribute('heal')">{{ stage % 10 == 0 ? '2x' : '' }}回复血量 </div>
+                            <div class="heal-max attribute" @click="addAttribute('maxHealth')">{{ stage % 10 == 0 ? '2x' : '' }}最大生命</div>
+                            <div class="max-MP attribute" @click="addAttribute('maxMana')">{{ stage % 10 == 0 ? '2x' : '' }}最大法力</div>
                         </div>
                         <div class="loot-title">或选择其中一个魔法</div>
                         <div class="loot-item-bar">
@@ -149,10 +149,11 @@ export default {
             }
         },
         checkEnemyDied(){
-            for(let i =0; i < this.enemyList.length; i++){
+            for(let i = 0; i < this.enemyList.length; i++){
                 if(this.enemyList[i].isDied){
                     this.enemyList.splice(i,1);
                     i--;
+                    this.score += this.stage / 10 * 5;
                 }
             }
         },
