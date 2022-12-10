@@ -49,12 +49,14 @@ export default {
     color: #2c3e50;
     display: flex;
     justify-content: center;
+    width: auto;
+    height: 100%;
 }
 .game-page {
     max-width: 600px;
     margin: 0 auto;
 }
 .page{
-    min-width: 200px;
+    min-width: 298px;
 }
 </style>

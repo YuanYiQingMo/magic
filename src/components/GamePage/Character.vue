@@ -9,11 +9,11 @@
             <div class="describe">{{enemy.describe}}</div>
             <br />
             <div>
-                <div style="font-size: 0.3rem; font-weight: 550;">下一回合</div>
-                <div v-if="enemy.nextActive == 'ATK'" style="font-size: 0.3rem; font-weight: 550;">
+                <div style="font-size: 1rem; font-weight: 550;color: rgb(214, 88, 88);">下一回合</div>
+                <div v-if="enemy.nextActive == 'ATK'" style="font-size: 1rem; font-weight: 550;color: rgb(214, 88, 88);">
                     {{ `攻击:${enemy.atk}` }}
                 </div>
-                <div v-if="enemy.nextActive == 'DEF'" style="font-size: 0.3rem; font-weight: 550;">
+                <div v-if="enemy.nextActive == 'DEF'" style="font-size: 1rem; font-weight: 550;color: rgb(79, 146, 221) ;">
                     {{ `防御:${enemy.def}` }}
                 </div>
             </div>
@@ -79,14 +79,14 @@ export default {
 </script>
 <style scoped>
 .describe{
-    font-size: 2px;
+    font-size: 14px;
     font-weight: 400;   
 }
 .warper {
     width: 100%;
 }
 .character-name {
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
     margin: 12px 6px;

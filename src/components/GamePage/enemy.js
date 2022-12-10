@@ -13,6 +13,7 @@ class enemy {
         this.isDied = false;
         this.shield = 0;
         this.nextActive = "ATK";
+        this.isFreeze = false;
     }
     died() {
         this.isDied = true;
@@ -84,16 +85,22 @@ class enemy {
     getEffect(effect, damage) {
         switch (effect) {
             case "lowFreeze":
-                Math.random() > 0.9
-                    ? this.getDamage(damage)
-                    : (this.getDamage(damage),
-                    (this.describe += "(冻住了,随便打)"),
-                    (this.atk = 0));
+                if(!this.isFreeze){
+                    Math.random() > 0.9
+                        ? this.getDamage(damage)
+                        : (this.getDamage(damage),
+                        (this.isFreeze = true),
+                        (this.describe += "(冻住了,随便打)"),
+                        (this.atk = 0));
+                }
                 break;
             case "HighFreeze":
-                this.getDamage(damage)
-                this.describe += "(冻住了,随便打)"
-                this.atk = 0;
+                if(!this.isFreeze){
+                    this.getDamage(damage);
+                    this.isFreeze = true;
+                    this.describe += "(冻住了,随便打)";
+                    this.atk = 0;
+                }
                 break;
             case "lowDodge":
                 if (Math.random() > 0.2) {

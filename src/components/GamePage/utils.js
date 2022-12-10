@@ -17,14 +17,14 @@ export function randomRate(rate){
             if(randomNum < 60) return 'Tier2'
             return 'Tier1'
         case 'great':
-            if(randomNum < 5) return 'Tier5'
+            if(randomNum < 3) return 'Tier5'
             if(randomNum < 20) return 'Tier4'
-            if(randomNum < 70) return 'Tier3'
-            if(randomNum < 90) return 'Tier2'
+            if(randomNum < 60) return 'Tier3'
+            if(randomNum < 80) return 'Tier2'
             return 'Tier1'
         case 'legend':
-            if(randomNum < 20) return 'Tier5'
-            if(randomNum < 60) return 'Tier4'
+            if(randomNum < 10) return 'Tier5'
+            if(randomNum < 70) return 'Tier4'
             return 'Tier3'
     }
 }
@@ -77,6 +77,9 @@ export function summonEnemyList(difficult){
         case 'boss':
             res.push(summonEnemy('boss'));
             return res
+        case 'lastBoss':
+            res.push(summonEnemy('lastBoss'));
+            return res;
     }
     return res;
 }

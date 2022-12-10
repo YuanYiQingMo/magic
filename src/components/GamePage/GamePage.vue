@@ -5,13 +5,14 @@
         </div>
         <!-- 战斗地图 -->
         <div class="battle-map">
-            <div v-if="stage == 1" class="new-guide">点击敌人施放魔法</div>
-            <div style="display:flex;justify-content: space-around;margin-top: 8px;">
-                <div v-if="isEnd" class="end-game" @click="endGame">
-                    <div>寄</div>
-                    <div style="font-size: 1rem; color: black;">点击结束本局游戏</div>
-                </div>
-                <div  v-if="!isEnd">
+            <div v-if="isEnd" class="end-game" @click="endGame">
+                <div>寄</div>
+                <div style="font-size: 1rem; color: black;">点击结束本局游戏</div>
+            </div>
+            <div style="display:flex;justify-content: space-around;margin-top:8px;">
+                
+                <div v-if="stage == 1" class="new-guide">点击敌人施放魔法</div>
+                <div  v-if="!isEnd" style="width: 100%;display: flex;justify-content: center;">
                     <div class="enemy">
                         <character
                             v-for="enemy in enemyList"
@@ -30,7 +31,7 @@
                     <!-- 战利品获取 -->
                     <div v-if="isLoot" class="loot-bar">
                         <div style="font-size:1rem; margin:12px 0">选取你的奖励</div>
-                        <div style="display: flex; justify-content: center">
+                        <div style="display: flex; justify-content: space-around">
                             <div class="heal attribute" @click="addAttribute('heal')">{{ stage % 10 == 0 ? '2x' : '' }}回复血量 </div>
                             <div class="heal-max attribute" @click="addAttribute('maxHealth')">{{ stage % 10 == 0 ? '2x' : '' }}最大生命</div>
                             <div class="max-MP attribute" @click="addAttribute('maxMana')">{{ stage % 10 == 0 ? '2x' : '' }}最大法力</div>
@@ -55,11 +56,11 @@
                 </div>
             </div>
         </div>
-        <div class="round-ended" @click="nextRound">
-            下一回合<br/>(回复魔力)
-        </div>
         <!--法杖 -->
         <div class="wand-editor">
+            <div class="round-ended" @click="nextRound">
+                下一回合<br/>(回复魔力)
+            </div>
             <div class="wand-bar">
                 <div class="wand-title">点击选切换魔法</div>
                 <div style="display: flex; flex-direction: row;flex-wrap: wrap;">
@@ -138,7 +139,9 @@ export default {
             this.currentMagic = item;
         },
         summonEnemy() {
-            if(this.stage % 10 == 0 && this.stage != 0){
+            if(this.stage >= 50 && this.stage % 5 == 0){
+                this.enemyList.push(...summonEnemyList('lastBoss'))
+            }else if(this.stage % 10 == 0 && this.stage != 0){
                 this.enemyList.push(...summonEnemyList('boss'))
             }else if(this.stage > 50){
                 this.enemyList.push(...summonEnemyList('elite'));
@@ -270,9 +273,10 @@ export default {
 .battle-map {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     border: solid black 1px;
-    min-height: 300px;
+    min-width: 95%;
+    height: 60%;
     position: relative;
 }
 .new-guide{
@@ -284,6 +288,18 @@ export default {
 }
 .enemy,.you{
     display: flex;
+}
+.round-ended{
+    margin: 4px auto;
+    border: black solid 1px;
+    width: 80%;
+    padding: 4px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: small;
+}
+.wand-editor{
+    height: 40%;
 }
 .wand-bar {
     display: flex;
@@ -312,6 +328,7 @@ export default {
 .loot-bar{
     display: flex;
     flex-direction: column;
+    width: 95%;
 }
 
 .loot-item-bar{
@@ -323,10 +340,12 @@ export default {
     border: solid black 1px;
     border-radius: 10px;
     width: 90%;
-    margin: 2px auto;
+    margin: 8px auto;
+    padding:0 6px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.3rem;
 }
 .health-bar{
     position: relative;
@@ -356,17 +375,10 @@ export default {
     border: solid red 4px;
     margin: 1px;
 }
-.round-ended{
-    margin: 4px auto;
-    border: black solid 1px;
-    width: 80%;
-    padding: 4px;
-    border-radius: 24px;
-    cursor: pointer;
-    font-size: small;
-}
 .attribute{
-    font-size: 2px;
+    font-size: 1rem;
+    font-weight: bolder;
+    color: rgb(79, 79, 79);
     margin: 0 2px;
     border: black solid 1px;
     width: 30%;
@@ -394,8 +406,13 @@ export default {
 }
 .end-game{
     display: flex;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
     flex-direction: column;
     justify-content: center;
+    align-content: center;
     align-items: center;
     font-size: 5rem;
     color: rgb(185, 24, 24);
@@ -409,6 +426,7 @@ export default {
 }
 .Tier2{
     background-color: #3f3cff;
+    color: white;
 }
 .Tier3{
     background-color: #f832ee;
